@@ -1,0 +1,1 @@
+This folder contains all results from the analysis.
