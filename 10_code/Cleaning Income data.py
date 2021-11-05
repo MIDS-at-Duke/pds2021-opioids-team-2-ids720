@@ -4,7 +4,7 @@ pd.set_option("display.max_rows", 100, "display.max_columns", 100)
 
 # %%
 raw_df = pd.read_csv(
-    "C:\\Users\\deeks\\Documents\\MIDS\\IDS 720_Practising Data Science\\Datasets\\nhgis0001_csv\\nhgis0001_csv\\nhgis0001_ds176_20105_county.csv",
+    "https://raw.githubusercontent.com/MIDS-at-Duke/pds2021-opioids-team-2-ids720/data_merging/00_source_data/Income_data/nhgis0001_ds176_20105_county.csv?token=AQKRUJEOS2B57PNPA2NP4BDBR3MQW",
     encoding="ISO8859-1",
 )
 raw_df.head()
@@ -22,9 +22,32 @@ raw_df.rename(
 # %%
 # Reading in population data file
 popn = pd.read_csv(
-    "C:\\Users\\deeks\\Documents\\MIDS\\IDS 720_Practising Data Science\\Mid-Sem project\\Gitdata\\pds2021-opioids-team-2-ids720\\20_intermediate_files\\population_2000_2020.csv"
+    "https://raw.githubusercontent.com/MIDS-at-Duke/pds2021-opioids-team-2-ids720/data_merging/20_intermediate_files/population_2000_2020.csv?token=AQKRUJFLWW77HNRD3MYDCXTBR3MUS"
 )
 popn.head()
+
+popn["STATE"] = popn["STATE"].astype(str)
+popn["COUNTY"] = popn["COUNTY"].astype(str)
+
+for i, row in popn.iterrows():
+    if len(row["STATE"]) < 2:
+        popn.at[i, "STATE"] = '0' + row["STATE"]
+        pass
+    if len(row["COUNTY"]) == 1:
+        popn.at[i, "COUNTY"] = '00' + row["COUNTY"]
+        pass
+    elif len(row["COUNTY"]) == 2:
+        popn.at[i, "COUNTY"] = '0' + row["COUNTY"]
+        pass
+    else:
+        pass
+    pass
+
+popn["fips_code"] = popn["STATE"] + popn["COUNTY"]
+
+# QC
+# population["fips_code"].apply(lambda x: len(x) == 5).all()
+
 
 # %%
 merged = (
