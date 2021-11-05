@@ -66,9 +66,9 @@ vital_stats.dropna(inplace=True)
 vital_stats.isna().sum()
 
 
-# %%
-# Changing datatype for the Year column to date time
-vital_stats["Year"] = pd.to_datetime(vital_stats["Year"],format="%Y")
+# # %%
+# # Changing datatype for the Year column to date time
+vital_stats["Year"] = pd.DatetimeIndex(pd.to_datetime(vital_stats["Year"],format="%Y")).year
 
 
 # %%
@@ -140,3 +140,5 @@ vital_stats_final[vital_stats_final["State_Code"] == "AK"]
 vital_stats_final.to_csv('/Users/Aarushi/Duke/MIDS - Fall 2021/Fall 2021/720_IDS_PDS/pds2021-opioids-team-2-ids720/20_intermediate_files/vital_stata.csv', encoding='utf-8')
 
 
+vital_stats_final.info()
+# %%
