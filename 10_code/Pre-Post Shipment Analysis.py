@@ -22,9 +22,9 @@ ship_grouped['ships_per_cap'] = ship_grouped['MME']/ship_grouped['Population']
 
 # %%
 # specify the years needed before the policy change
-year = [2003, 2004, 2005, 2006, 2007, 2008, 2009]
+year = [2006, 2007, 2008, 2009]
 # create new dataframe with only data from those years
-pre_ship = ship_grouped.loc[ship_states['Year'].isin(year)]
+pre_ship = ship_grouped.loc[ship_grouped['Year'].isin(year)]
 
 
 # %%
@@ -34,7 +34,7 @@ control_states = pre_ship[pre_ship['BUYER_STATE'].isin(states)]
 import altair as alt
 
 alt.Chart(control_states).mark_line().encode(
-    x='Year',
+    alt.X('Year', axis=alt.Axis(values=year, format=".0f")),
     y='ships_per_cap',
     color='BUYER_STATE',
     
@@ -46,12 +46,13 @@ alt.Chart(control_states).mark_line().encode(
 
 # %%
 # do the same thing but for the entire timeframe
+years = [2006, 2007, 2008, 2009, 2010, 2011, 2012]
 pre_post_ship = ship_grouped[ship_grouped['BUYER_STATE'].isin(states)]
 # add a line for when the policy took place
 policy = pd.DataFrame({'Year': [2010]})
 
 chart = alt.Chart(pre_post_ship).mark_line().encode(
-    x='Year',
+    alt.X('Year', axis=alt.Axis(values=years, format=".0f")),
     y='ships_per_cap',
     color='BUYER_STATE',
     
