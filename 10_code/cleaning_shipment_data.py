@@ -11,7 +11,7 @@ shipment = pd.read_csv("/mnt/c/Users/sdona/Documents/Duke/720IDS/Mid-SemesterPro
 # read the data into a dataframe by chunking and only pulling the columns we need
 keep = []
 data_iterator = pd.read_csv("/mnt/c/Users/sdona/Documents/Duke/720IDS/Mid-SemesterProject/arcos_all_washpost.tsv", sep='\t', iterator=True, chunksize=200000,
-    usecols=['REPORTER_STATE','REPORTER_COUNTY','BUYER_COUNTY','BUYER_STATE','TRANSACTION_DATE','DOSAGE_UNIT','MME_Conversion_Factor','QUANTITY','UNIT','DRUG_NAME','dos_str'])
+    usecols=['REPORTER_STATE','REPORTER_COUNTY','BUYER_COUNTY','BUYER_STATE','TRANSACTION_DATE','DOSAGE_UNIT','MME_Conversion_Factor','CALC_BASE_WT_IN_GM','QUANTITY','UNIT','DRUG_NAME','dos_str'])
  
 for chunk in data_iterator:
     keep.append(chunk)
@@ -29,7 +29,7 @@ final_shipment['DATE'] = pd.to_datetime(final_shipment['TRANSACTION_DATE'], form
 
 # %%
 # calculation for Morphine Milligram Equivalent (MME)
-final_shipment["MME"] = final_shipment['DOSAGE_UNIT']*final_shipment['MME_Conversion_Factor']*final_shipment['dos_str']
+final_shipment["MME"] = final_shipment['CALC_BASE_WT_IN_GM']*final_shipment['MME_Conversion_Factor']
 
 
 # %%
