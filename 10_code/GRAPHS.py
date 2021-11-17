@@ -32,7 +32,7 @@ death_FL_post = death_FL[death_FL['Year'] >= 2010]
 
 
 # %%
-def get_reg_fit(data, color, yvar, xvar, alpha=0.05):
+def get_reg_fit(data, color, yvar, xvar, legend, alpha=0.05):
     colour= color
     years = list(np.arange(2003, 2016,1))
 
@@ -51,7 +51,8 @@ def get_reg_fit(data, color, yvar, xvar, alpha=0.05):
     predictions[["ci_low", "ci_high"]] = model_predict.conf_int(alpha=alpha)
 
     # Build chart
-    reg = alt.Chart(predictions).mark_line().encode(x=xvar, y=yvar, color = alt.value(f"{colour}"), Opacity= 'Test')
+    predictions['Treat'] = f"{legend}"
+    reg = alt.Chart(predictions).mark_line().encode(x=xvar, y=alt.Y(yvar, axis=alt.Axis(format='%')), color = alt.value(f"{colour}"), opacity=alt.Opacity("Treat", legend=alt.Legend(title="Legend")))
     ci = (
         alt.Chart(predictions)
         .mark_errorband()
@@ -69,7 +70,7 @@ def get_reg_fit(data, color, yvar, xvar, alpha=0.05):
 
 
 # %%
-def plotting_chart(policy_year, color, data, yvar, xvar, alpha=0.05):
+def plotting_chart(policy_year, color, data, yvar, xvar, legend, alpha=0.05):
     pl_year = policy_year
     pol_year = []
     pol_year.append(int(pl_year))
@@ -77,7 +78,7 @@ def plotting_chart(policy_year, color, data, yvar, xvar, alpha=0.05):
     years = list(np.arange(2003, 2016, 1))
 
     # Plotting chart
-    fit, reg_chart = get_reg_fit(color=color, data= data, yvar=yvar, xvar=xvar, alpha=alpha)
+    fit, reg_chart = get_reg_fit(color=color, data= data, yvar=yvar, xvar=xvar, legend=legend, alpha=alpha)
 
     policy = pd.DataFrame({"Year": pol_year})
 
