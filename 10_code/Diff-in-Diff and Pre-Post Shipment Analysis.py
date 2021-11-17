@@ -94,15 +94,15 @@ pre_FL_plot = plotting_chart(2010, "blue", pre_FL_ship, "ships_per_cap", "Year",
 post_FL_plot = plotting_chart(2010, "blue", post_FL_ship, "ships_per_cap", "Year","Florida", alpha=0.05)
 
 
-final = pre_FL_plot + post_FL_plot
-final.properties(title = "Pre-Post Analysis of Regulations on Opioid Shipments for Florida")
+pre_post_final = pre_FL_plot + post_FL_plot
+pre_post_final.properties(title = "Pre-Post Analysis of Regulations on Opioid Shipments for Florida")
 
 # %%
 pre_crtl_plot = plotting_chart(2010, "#9467bd", pre_crtl_ship, "ships_per_cap", "Year","Control States - NV, SC, OR", alpha=0.05)
 post_crtl_plot = plotting_chart(2010, "#9467bd", post_crtl_ship, "ships_per_cap", "Year","Control States - NV, SC, OR", alpha=0.05)
 
 
-final = pre_FL_plot + post_FL_plot + pre_crtl_plot + post_crtl_plot
-final.properties(title = "Pre-Post Analysis of Regulations on Opioid Shipments for Florida vs Control States")
+diff_in_diff_final = pre_FL_plot + post_FL_plot + pre_crtl_plot + post_crtl_plot
+diff_in_diff_final.properties(title = "Diff-in-Diff Analysis of Regulations on Opioid Shipments for Florida vs Control States")
 
 
