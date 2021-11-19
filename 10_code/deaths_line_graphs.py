@@ -42,7 +42,7 @@ deaths_state = pre_policy_WA.groupby(["State_Code", "Year"], as_index=False)[
 ].sum()
 deaths_state["deaths_per_cap"] = deaths_state["Deaths"] / deaths_state["Population"]
 # The states below are chosen based on the trend of deaths/capita overtime
-WL_similar_state = ["WA", "HI", "MT", "CO"]
+WL_similar_state = ["WA", "HI", "MT", "OR"]
 states_similar = deaths_state[deaths_state["State_Code"].isin(WL_similar_state)]
 
 
