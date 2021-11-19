@@ -3,7 +3,7 @@ import pandas as pd
 import numpy as np
 
 # %%
-popinc = pd.read_csv("https://media.githubusercontent.com/media/MIDS-at-Duke/pds2021-opioids-team-2-ids720/main/20_intermediate_files/population_2000_2020_inc.csv?token=AVKGWHZB465MIBQ6V7QXPU3BSQQTG")
+popinc = pd.read_csv("https://media.githubusercontent.com/media/MIDS-at-Duke/pds2021-opioids-team-2-ids720/data_merging/20_intermediate_files/population_2000_2020_inc.csv?token=AVKGWH4IHMMTY4IFIP4BRBTBS4OUU")
 death = pd.read_csv("/Users/Aarushi/Duke/MIDS - Fall 2021/Fall 2021/720_IDS_PDS/pds2021-opioids-team-2-ids720/20_intermediate_files/vital_stata.csv")
 
 # %%
@@ -18,49 +18,26 @@ popinc.info()
 death.head()
 
 # %%
+print(death.Deaths.min())
+print(death.Deaths.max())
+
+# %%
 #Vital Statistics data types
 death.info()
 
 # %%
-for i in death.Deaths.unique():
-    print(i)
+death["Drug/Alcohol Induced Cause"].unique()
 
 # %%
 death = death.replace("Missing", np.NaN)
 
 # %%
-death.Deaths.value_counts()
-
-# %%
 death["Deaths"] = death["Deaths"].astype(float)
-
-# %%
-for i in death.Deaths.unique():
-    print(i)
-
-# %%
-death.info()
 
 # %%
 # Collapsing the dataset to get total number of deaths per county per year
 mortality = death.groupby(["Year","State_Code","County_Name"], as_index=False)['Deaths'].apply(lambda x: x.sum())
 mortality.head()
-
-# %%
-# death.Deaths.isnull().sum()
-# death.Deaths.isna().sum()
-# death[death["Deaths"] == "" ]
-
-# %%
-# import re
-# # exp = "\s+"
-# for i in death["Deaths"].unique():
-#     if re.match(exp,i):
-#         print(i)
-
-# %%
-# for i in death["Deaths"].unique():
-#     print(i)
 
 # %%
 # Changing columns name for merging
@@ -88,7 +65,7 @@ merged = pd.merge(
             "Income_Error_Margin",
         ]
     ],
-    how="left",
+    how="outer",
     on=["Year", "State_Code", "County_Name"],
     validate="m:1",
     indicator=True,
@@ -103,22 +80,42 @@ merged.head()
 merged.loc[merged["Population"].isna()]["State_Code"].unique()
 
 # %%
+merged.loc[merged["Deaths"].isna()]["State_Code"].unique()
+
+# %%
+[merged["Deaths"].isna().sum()]
+
+# %%
 # Verifying whether the data merged correctly
 check = merged[merged["_merge"] != "both"]
 check
-# There are cases where data was only available in left column
+# There are cases where data was only available for each respective dataset
+
+# %%
+check_right = merged[merged["_merge"] == "right_only"]
+check_right
+
+# %%
+check[check["_merge"] == "left_only"]
+
+# %%
+#Imputing death values where death data is missing
+merged["Deaths"] = merged["Deaths"].apply(lambda x: x if not np.isnan(x) else np.random.randint(0, 10))
+
+# %%
+[merged["Deaths"].isna().sum()]
 
 # %%
 #Checking the counties where we did not have population and income data
-check.County_Name.value_counts()
+check[check["_merge"]=="left_only"].County_Name.value_counts()
 
 # %%
 #Checking how many values by state are unavailable
-check.State_Code.value_counts()
+check[check["_merge"]=="left_only"].State_Code.value_counts()
 
 # %%
 #Checking unavailable values based on year
-check.Year.value_counts().sort_values()
+check[check["_merge"]=="left_only"].Year.value_counts().sort_values()
 
 # %% [markdown]
 # For now we will leave these values as it is, and proceed with calculating deaths per capita to select the states, for our analysis. If the per capita rate for any of these states is close to our Analysis states (TX,FL, WA) we can think of how to impute these values
@@ -166,8 +163,14 @@ merged = merged[
 
 
 # %%
+merged.info()
+
+# %%
 # Looking at the death per cap values to shortlist the control states for our analysis
-merged.groupby(by=(["State_Code"])).mean().sort_values(by="Death_per_cap")
+merged.groupby(by=(["Year","State_Code"])).mean().sort_values(by="Death_per_cap")
+
+# %%
+merged.duplicated(["Year","State_Code","County_Name"]).sum()
 
 # %%
 # For WA - IL, ID, WI
@@ -175,7 +178,23 @@ merged.groupby(by=(["State_Code"])).mean().sort_values(by="Death_per_cap")
 # For TX - UT, CO, KS
 
 # %%
-merged.to_csv('/Users/Aarushi/Duke/MIDS - Fall 2021/Fall 2021/720_IDS_PDS/pds2021-opioids-team-2-ids720/20_intermediate_files/mortality_merged.csv', encoding='utf-8', index=False)
+print(merged.Year.min())
+print(merged.Year.max())
+
+# %%
+merged.Year.unique()
+
+# %%
+years = [2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013,
+       2014, 2015]
+merged_final = merged[merged["Year"].isin(years)]
+
+# %%
+print(merged_final.Year.min())
+print(merged_final.Year.max())
+
+# %%
+merged_final.to_csv('/Users/Aarushi/Duke/MIDS - Fall 2021/Fall 2021/720_IDS_PDS/pds2021-opioids-team-2-ids720/20_intermediate_files/mortality_merged.csv', encoding='utf-8', index=False)
 
 
 # %%
