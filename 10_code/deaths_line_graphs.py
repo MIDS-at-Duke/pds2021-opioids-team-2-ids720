@@ -65,7 +65,7 @@ deaths_state = pre_policy_TX.groupby(["State_Code", "Year"], as_index=False)[
 
 deaths_state["deaths_per_cap"] = deaths_state["Deaths"] / deaths_state["Population"]
 # The states below are chosen based on the trend of deaths/capita overtime
-TX_similar_state = ["TX", "MO", "OR", "IL"]
+TX_similar_state = ["TX", "CA", "NY", "IL"]
 states_similar = deaths_state[deaths_state["State_Code"].isin(TX_similar_state)]
 
 
