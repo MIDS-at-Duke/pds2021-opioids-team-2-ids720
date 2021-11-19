@@ -88,6 +88,7 @@ cod = [
     "Drug poisonings (overdose) Suicide (X60-X64)",
     "Drug poisonings (overdose) Undetermined (Y10-Y14)",
     "Drug poisonings (overdose) Homicide (X85)",
+    "All other drug-induced causes"
 ]
 vital_stats_new = vital_stats[vital_stats["Drug/Alcohol Induced Cause"].isin(cod)]
 vital_stats_new
@@ -128,17 +129,20 @@ vital_stats_new.head()
 
 # %%
 # Dropping Alaska from our data set
-vital_stats_final = vital_stats_new[vital_stats_new["State_Code"]!="AK"]
+vital_stats_final = vital_stats_new.loc[vital_stats_new["State_Code"]!="AK"]
 
 
 # %%
 # Checking if AK statecode is still present in the data
-vital_stats_final[vital_stats_final["State_Code"] == "AK"]
+vital_stats_final.loc[vital_stats_final["State_Code"] == "AK"]
+
+#%%
 
 
 # %%
 vital_stats_final.to_csv('/Users/Aarushi/Duke/MIDS - Fall 2021/Fall 2021/720_IDS_PDS/pds2021-opioids-team-2-ids720/20_intermediate_files/vital_stata.csv', encoding='utf-8')
 
 
-vital_stats_final.info()
+
+
 # %%
