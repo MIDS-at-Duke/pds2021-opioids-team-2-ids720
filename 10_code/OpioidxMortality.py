@@ -10,26 +10,28 @@ import numpy as np
 # %%
 # loading data and filtering for Florida
 death_data = pd.read_csv(
-    "https://raw.githubusercontent.com/MIDS-at-Duke/pds2021-opioids-team-2-ids720/data_merging/20_intermediate_files/mortality_merged.csv?token=AQKRUJFTPT447QDDENXH6QDBUA7F4"
+    "https://raw.githubusercontent.com/MIDS-at-Duke/pds2021-opioids-team-2-ids720/data_merging/20_intermediate_files/mortality_merged_imputed.csv?token=AQKRUJH5K7W47UMB7EQSB7TBUBLDI"
 )
 
+death_data["Death_per_cap_final"] = np.where(death_data["Death_per_cap"].notna(), death_data["Death_per_cap"],death_data["imputed_death_per_cap"])
+
 death_FL = death_data.loc[
-    death_data["State_Code"] == "FL", ["Year", "County_Name", "Death_per_cap"]
+    death_data["State_Code"] == "FL", ["Year", "County_Name", "Death_per_cap_final"]
 ]
 
 
 # %%
-# death_FL["Death_per_cap"] = death_FL["Death_per_cap"].apply(lambda x:({:.4%}.format(x)))
+# death_FL["Death_per_cap_final"] = death_FL["Death_per_cap_final"].apply(lambda x:({:.4%}.format(x)))
 # death_FL.head()
 
 
 # %%
 # check for death rate between 0 and 1
-print(min(death_FL["Death_per_cap"]))
-print(max(death_FL["Death_per_cap"]))
+print(min(death_FL["Death_per_cap_final"]))
+print(max(death_FL["Death_per_cap_final"]))
 
 # check for missing values in death rate
-print(death_FL["Death_per_cap"].isna().any())
+print(death_FL["Death_per_cap_final"].isna().any())
 
 
 # %%
@@ -113,10 +115,10 @@ def plotting_chart(policy_year, color, data, yvar, xvar, legend, alpha=0.05):
 
 # %%
 pre_fl = plotting_chart(
-    2010, "blue", death_FL_pre, "Death_per_cap", "Year", legend="Florida", alpha=0.05
+    2010, "blue", death_FL_pre, "Death_per_cap_final", "Year", legend="Florida", alpha=0.05
 )
 post_fl = plotting_chart(
-    2010, "blue", death_FL_post, "Death_per_cap", "Year", legend="Florida", alpha=0.05
+    2010, "blue", death_FL_post, "Death_per_cap_final", "Year", legend="Florida", alpha=0.05
 )
 
 final = pre_fl + post_fl
@@ -128,7 +130,7 @@ final.properties(
 
 # %%
 death_WA = death_data.loc[
-    death_data["State_Code"] == "WA", ["Year", "County_Name", "Death_per_cap"]
+    death_data["State_Code"] == "WA", ["Year", "County_Name", "Death_per_cap_final"]
 ]
 # filter out for year pre and post
 death_WA_pre = death_WA[death_WA["Year"] < 2011]
@@ -137,10 +139,10 @@ death_WA_post = death_WA[death_WA["Year"] >= 2011]
 
 # %%
 pre_wa = plotting_chart(
-    2011, "blue", death_WA_pre, "Death_per_cap", "Year", "Washington", alpha=0.05
+    2011, "blue", death_WA_pre, "Death_per_cap_final", "Year", "Washington", alpha=0.05
 )
 post_wa = plotting_chart(
-    2011, "blue", death_WA_post, "Death_per_cap", "Year", "Washington", alpha=0.05
+    2011, "blue", death_WA_post, "Death_per_cap_final", "Year", "Washington", alpha=0.05
 )
 
 final = pre_wa + post_wa
@@ -152,7 +154,7 @@ final.properties(
 
 # %%
 death_TX = death_data.loc[
-    death_data["State_Code"] == "TX", ["Year", "County_Name", "Death_per_cap"]
+    death_data["State_Code"] == "TX", ["Year", "County_Name", "Death_per_cap_final"]
 ]
 # filter out for year pre and post
 death_TX_pre = death_TX[death_TX["Year"] < 2007]
@@ -161,10 +163,10 @@ death_TX_post = death_TX[death_TX["Year"] >= 2007]
 
 # %%
 pre_TX = plotting_chart(
-    2007, "orange", death_TX_pre, "Death_per_cap", "Year", "Texas", alpha=0.05
+    2007, "orange", death_TX_pre, "Death_per_cap_final", "Year", "Texas", alpha=0.05
 )
 post_TX = plotting_chart(
-    2007, "orange", death_TX_post, "Death_per_cap", "Year", "Texas", alpha=0.05
+    2007, "orange", death_TX_post, "Death_per_cap_final", "Year", "Texas", alpha=0.05
 )
 
 final = pre_TX + post_TX
@@ -194,16 +196,16 @@ diff_FL_control_post = diff_FL_control.loc[diff_FL_control["Year"] >= 2010]
 
 # %%
 pre_FL = plotting_chart(
-    2010, "blue", diff_FL_treat_pre, "Death_per_cap", "Year", "Florida", alpha=0.05
+    2010, "blue", diff_FL_treat_pre, "Death_per_cap_final", "Year", "Florida", alpha=0.05
 )
 post_FL = plotting_chart(
-    2010, "blue", diff_FL_treat_post, "Death_per_cap", "Year", "Florida", alpha=0.05
+    2010, "blue", diff_FL_treat_post, "Death_per_cap_final", "Year", "Florida", alpha=0.05
 )
 pre_control = plotting_chart(
     2010,
     "#9467bd",
     diff_FL_control_pre,
-    "Death_per_cap",
+    "Death_per_cap_final",
     "Year",
     "Comparison States - MI, NV, SC",
     alpha=0.05,
@@ -212,7 +214,7 @@ post_control = plotting_chart(
     2010,
     "#9467bd",
     diff_FL_control_post,
-    "Death_per_cap",
+    "Death_per_cap_final",
     "Year",
     "Comparison States - MI, NV, SC",
     alpha=0.05,
@@ -243,16 +245,16 @@ diff_TX_control_post = diff_TX_control.loc[
 ]
 
 pre_TX = plotting_chart(
-    2007, "blue", diff_TX_treat_pre, "Death_per_cap", "Year", "Texas", alpha=0.05
+    2007, "blue", diff_TX_treat_pre, "Death_per_cap_final", "Year", "Texas", alpha=0.05
 )
 post_TX = plotting_chart(
-    2007, "blue", diff_TX_treat_post, "Death_per_cap", "Year", "Texas", alpha=0.05
+    2007, "blue", diff_TX_treat_post, "Death_per_cap_final", "Year", "Texas", alpha=0.05
 )
 pre_control = plotting_chart(
     2007,
     "#9467bd",
     diff_TX_control_pre,
-    "Death_per_cap",
+    "Death_per_cap_final",
     "Year",
     "Comparison States - CA, NY, OR",
     alpha=0.05,
@@ -261,7 +263,7 @@ post_control = plotting_chart(
     2007,
     "#9467bd",
     diff_TX_control_post,
-    "Death_per_cap",
+    "Death_per_cap_final",
     "Year",
     "Comparison States - CA, NY, OR",
     alpha=0.05,
@@ -290,16 +292,16 @@ diff_WA_control_pre = diff_WA_control.loc[diff_WA_control["Year"] < 2011]
 diff_WA_control_post = diff_WA_control.loc[diff_WA_control["Year"] >= 2011]
 
 pre_WA = plotting_chart(
-    2011, "blue", diff_WA_treat_pre, "Death_per_cap", "Year", "Washington", alpha=0.05
+    2011, "blue", diff_WA_treat_pre, "Death_per_cap_final", "Year", "Washington", alpha=0.05
 )
 post_WA = plotting_chart(
-    2011, "blue", diff_WA_treat_post, "Death_per_cap", "Year", "Washington", alpha=0.05
+    2011, "blue", diff_WA_treat_post, "Death_per_cap_final", "Year", "Washington", alpha=0.05
 )
 pre_control = plotting_chart(
     2011,
     "#9467bd",
     diff_WA_control_pre,
-    "Death_per_cap",
+    "Death_per_cap_final",
     "Year",
     "Comparison States - HI, MI, OR",
     alpha=0.05,
@@ -308,7 +310,7 @@ post_control = plotting_chart(
     2011,
     "#9467bd",
     diff_WA_control_post,
-    "Death_per_cap",
+    "Death_per_cap_final",
     "Year",
     "Comparison States - HI, MI, OR",
     alpha=0.05,
