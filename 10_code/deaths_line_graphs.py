@@ -11,7 +11,7 @@ import altair as alt
 # )
 
 deaths = pd.read_csv(
-    "https://raw.githubusercontent.com/MIDS-at-Duke/pds2021-opioids-team-2-ids720/data_merging/20_intermediate_files/mortality_merged_imputed.csv?token=AQKRUJE4RNZFHWEX6OLH5HTBUHDHC"
+    "https://raw.githubusercontent.com/MIDS-at-Duke/pds2021-opioids-team-2-ids720/data_merging/20_intermediate_files/mortality_merged_imputed.csv?token=AQKRUJAKERFFX7DQRG4TIODBUJN2A"
 )
 
 
@@ -22,19 +22,17 @@ deaths = pd.read_csv(
 pre_year_FL = [2003, 2004, 2005, 2006, 2007, 2008, 2009]
 pre_policy_FL = deaths.loc[deaths["Year"].isin(pre_year_FL)]
 deaths_state = pre_policy_FL.groupby(["State_Code", "Year"], as_index=False)[
-    ["imputed_deaths", "Population"]
-].sum()
-deaths_state["deaths_per_cap"] = (
-    deaths_state["imputed_deaths"] / deaths_state["Population"]
-)
+    "Imputed_death_per_cap"
+].mean()
+
 # The states below are chosen based on the trend of deaths/capita overtime
-FL_similar_state = ["FL", "MI", "NV", "SC"]
+FL_similar_state = ["FL", "MI", "NV", "MO", "CA", "NY"]
 states_similar = deaths_state[deaths_state["State_Code"].isin(FL_similar_state)]
 
 
 alt.Chart(states_similar).mark_line().encode(
     alt.X("Year:Q", axis=alt.Axis(format=".0f", values=pre_year_FL)),
-    y="deaths_per_cap",
+    y="Imputed_death_per_cap",
     color="State_Code",
 ).properties(
     width=500, height=500, title="Pre-policy Trend for States Similar to Florida"
@@ -43,22 +41,19 @@ alt.Chart(states_similar).mark_line().encode(
 # %%
 # Looking at States for analysis for the impact of change in policy in Washington
 pre_year_WA = [2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011]
-pre_year_WA = [2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011]
 pre_policy_WA = deaths.loc[deaths["Year"].isin(pre_year_WA)]
 deaths_state = pre_policy_WA.groupby(["State_Code", "Year"], as_index=False)[
-    ["imputed_deaths", "Population"]
-].sum()
-deaths_state["deaths_per_cap"] = (
-    deaths_state["imputed_deaths"] / deaths_state["Population"]
-)
+    ["Imputed_death_per_cap"]
+].mean()
+
 # The states below are chosen based on the trend of deaths/capita overtime
-WL_similar_state = ["WA", "HI", "MT", "OR"]
+WL_similar_state = ["WA", "HI", "OR", "NY", "CA"]
 states_similar = deaths_state[deaths_state["State_Code"].isin(WL_similar_state)]
 
 
 alt.Chart(states_similar).mark_line().encode(
     alt.X("Year:Q", axis=alt.Axis(format=".0f", values=pre_year_WA)),
-    y="deaths_per_cap",
+    y="Imputed_death_per_cap",
     color="State_Code",
 ).properties(
     width=500, height=500, title="Pre-policy Trend for States Similar to Washington"
@@ -70,20 +65,17 @@ alt.Chart(states_similar).mark_line().encode(
 pre_year_TX = [2003, 2004, 2005, 2006, 2007]
 pre_policy_TX = deaths.loc[deaths["Year"].isin(pre_year_TX)]
 deaths_state = pre_policy_TX.groupby(["State_Code", "Year"], as_index=False)[
-    ["imputed_deaths", "Population"]
-].sum()
+    ["Imputed_death_per_cap"]
+].mean()
 
-deaths_state["deaths_per_cap"] = (
-    deaths_state["imputed_deaths"] / deaths_state["Population"]
-)
 # The states below are chosen based on the trend of deaths/capita overtime
-TX_similar_state = ["TX", "CA", "NY", "IL"]
+TX_similar_state = ["TX", "NY", "IL", "OR", "MI", "CA"]
 states_similar = deaths_state[deaths_state["State_Code"].isin(TX_similar_state)]
 
 
 alt.Chart(states_similar).mark_line().encode(
     alt.X("Year:Q", axis=alt.Axis(format=".0f", values=pre_year_TX)),
-    y="deaths_per_cap",
+    y="Imputed_death_per_cap",
     color="State_Code",
 ).properties(
     width=500, height=500, title="Pre-policy Trend for States Similar to Texas"
