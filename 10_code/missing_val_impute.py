@@ -60,4 +60,10 @@ mortality.head()
 mortality["Death_per_cap"] = mortality["imputed_deaths"] / mortality["Population"]
 
 # %%
-mortality.to_csv("mortality_merged_imputed.csv", encoding="utf-8", index=False)
+mortality.to_csv(
+    "./20_intermediate_files/mortality_merged_imputed.csv",
+    encoding="utf-8",
+    index=False,
+)
+
+# %%
