@@ -148,28 +148,28 @@ vs_pop_thresh.Deaths.isna().sum()
 
 
 # %%
-# vs_pop_thresh.to_csv(
-#     "./20_intermediate_files/mortality_merged_with_pop_thresh.csv",
-#     encoding="utf-8",
-#     index=False,
-# )
-
-# %%
-vs_pop_thresh["Deaths"] = vs_pop_thresh["Deaths"].replace("Missing", np.NaN)
-vs_pop_thresh["Deaths"] = vs_pop_thresh["Deaths"].astype(float)
-
-# %%
-mortality = vs_pop_thresh.groupby(
-    ["Year", "State_Code", "County_Name", "Population", "Median_Income_2010"],
-    as_index=False,
-)["Deaths"].apply(lambda x: x.sum())
-mortality.head()
-
-# %%
-mortality.to_csv(
+vs_pop_thresh.to_csv(
     "./20_intermediate_files/mortality_merged_with_pop_thresh.csv",
     encoding="utf-8",
     index=False,
 )
+
+# %%
+# vs_pop_thresh["Deaths"] = vs_pop_thresh["Deaths"].replace("Missing", np.NaN)
+# vs_pop_thresh["Deaths"] = vs_pop_thresh["Deaths"].astype(float)
+
+# # %%
+# mortality = vs_pop_thresh.groupby(
+#     ["Year", "State_Code", "County_Name", "Population", "Median_Income_2010"],
+#     as_index=False,
+# )["Deaths"].apply(lambda x: x.sum())
+# mortality.head()
+
+# # %%
+# mortality.to_csv(
+#     "./20_intermediate_files/mortality_merged_with_pop_thresh.csv",
+#     encoding="utf-8",
+#     index=False,
+# )
 
 # %%
