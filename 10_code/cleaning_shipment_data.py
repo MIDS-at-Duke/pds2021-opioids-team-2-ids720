@@ -32,6 +32,10 @@ final_shipment[final_shipment['MME_Conversion_Factor'].isna()]
 # no nulls in either, good to move on to the calculation
 
 # %%
+# convert the weight in grams to milligrams
+final_shipment["CALC_BASE_WT_IN_MG"] = final_shipment['CALC_BASE_WT_IN_GM']*1000
+
+# %%
 # calculation for Morphine Milligram Equivalent (MME)
 final_shipment["MME"] = final_shipment['CALC_BASE_WT_IN_GM']*final_shipment['MME_Conversion_Factor']
 
