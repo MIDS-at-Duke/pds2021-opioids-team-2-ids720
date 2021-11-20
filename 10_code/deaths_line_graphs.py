@@ -4,8 +4,14 @@
 import pandas as pd
 import altair as alt
 
+# import os
+
+# os.chdir(
+#     "C:\\Users\\deeks\\Documents\\MIDS\\IDS 720_Practising Data Science\\Mid-Sem project\\Gitdata\\pds2021-opioids-team-2-ids720\\"
+# )
+
 deaths = pd.read_csv(
-    "https://raw.githubusercontent.com/MIDS-at-Duke/pds2021-opioids-team-2-ids720/data_merging/20_intermediate_files/mortality_merged_imputed.csv?token=AQKRUJCQO7IGXNJ4JDWA7C3BUENYE"
+    "https://raw.githubusercontent.com/MIDS-at-Duke/pds2021-opioids-team-2-ids720/data_merging/20_intermediate_files/mortality_merged_imputed.csv?token=AQKRUJE4RNZFHWEX6OLH5HTBUHDHC"
 )
 
 
@@ -16,9 +22,11 @@ deaths = pd.read_csv(
 pre_year_FL = [2003, 2004, 2005, 2006, 2007, 2008, 2009]
 pre_policy_FL = deaths.loc[deaths["Year"].isin(pre_year_FL)]
 deaths_state = pre_policy_FL.groupby(["State_Code", "Year"], as_index=False)[
-    ["Deaths", "Population"]
+    ["imputed_deaths", "Population"]
 ].sum()
-deaths_state["deaths_per_cap"] = deaths_state["Deaths"] / deaths_state["Population"]
+deaths_state["deaths_per_cap"] = (
+    deaths_state["imputed_deaths"] / deaths_state["Population"]
+)
 # The states below are chosen based on the trend of deaths/capita overtime
 FL_similar_state = ["FL", "MI", "NV", "SC"]
 states_similar = deaths_state[deaths_state["State_Code"].isin(FL_similar_state)]
@@ -38,9 +46,11 @@ pre_year_WA = [2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011]
 pre_year_WA = [2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011]
 pre_policy_WA = deaths.loc[deaths["Year"].isin(pre_year_WA)]
 deaths_state = pre_policy_WA.groupby(["State_Code", "Year"], as_index=False)[
-    ["Deaths", "Population"]
+    ["imputed_deaths", "Population"]
 ].sum()
-deaths_state["deaths_per_cap"] = deaths_state["Deaths"] / deaths_state["Population"]
+deaths_state["deaths_per_cap"] = (
+    deaths_state["imputed_deaths"] / deaths_state["Population"]
+)
 # The states below are chosen based on the trend of deaths/capita overtime
 WL_similar_state = ["WA", "HI", "MT", "OR"]
 states_similar = deaths_state[deaths_state["State_Code"].isin(WL_similar_state)]
@@ -60,10 +70,12 @@ alt.Chart(states_similar).mark_line().encode(
 pre_year_TX = [2003, 2004, 2005, 2006, 2007]
 pre_policy_TX = deaths.loc[deaths["Year"].isin(pre_year_TX)]
 deaths_state = pre_policy_TX.groupby(["State_Code", "Year"], as_index=False)[
-    ["Deaths", "Population"]
+    ["imputed_deaths", "Population"]
 ].sum()
 
-deaths_state["deaths_per_cap"] = deaths_state["Deaths"] / deaths_state["Population"]
+deaths_state["deaths_per_cap"] = (
+    deaths_state["imputed_deaths"] / deaths_state["Population"]
+)
 # The states below are chosen based on the trend of deaths/capita overtime
 TX_similar_state = ["TX", "CA", "NY", "IL"]
 states_similar = deaths_state[deaths_state["State_Code"].isin(TX_similar_state)]
@@ -81,9 +93,11 @@ alt.Chart(states_similar).mark_line().encode(
 # %%
 # we group by states and year as now we are only looking at states over time and not county
 deaths_state = deaths.groupby(["State_Code", "Year"], as_index=False)[
-    ["Deaths", "Population"]
+    ["imputed_deaths", "Population"]
 ].sum()
-deaths_state["deaths_per_cap"] = deaths_state["Deaths"] / deaths_state["Population"]
+deaths_state["deaths_per_cap"] = (
+    deaths_state["imputed_deaths"] / deaths_state["Population"]
+)
 
 # %% [markdown]
 # #  Pre - Post Comparison

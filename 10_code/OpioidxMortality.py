@@ -10,7 +10,7 @@ import numpy as np
 # %%
 # loading data and filtering for Florida
 death_data = pd.read_csv(
-    "https://raw.githubusercontent.com/MIDS-at-Duke/pds2021-opioids-team-2-ids720/data_merging/20_intermediate_files/mortality_merged.csv?token=AQKRUJHSMJIEFI6AFQ2XEOLBUETTK"
+    "https://raw.githubusercontent.com/MIDS-at-Duke/pds2021-opioids-team-2-ids720/data_merging/20_intermediate_files/mortality_merged_imputed.csv?token=AQKRUJE4RNZFHWEX6OLH5HTBUHDHC"
 )
 
 # death_data["Death_per_cap"] = np.where(death_data["Death_per_cap"].notna(), death_data["Death_per_cap"],death_data["imputed_death_per_cap"])
