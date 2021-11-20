@@ -4,13 +4,16 @@
 # %%
 import pandas as pd
 import numpy as np
+import os
+
+os.chdir(
+    "C:\\Users\\deeks\\Documents\\MIDS\\IDS 720_Practising Data Science\\Mid-Sem project\\Gitdata\\pds2021-opioids-team-2-ids720\\"
+)
 
 
 # %%
-popinc = pd.read_csv(
-    "https://media.githubusercontent.com/media/MIDS-at-Duke/pds2021-opioids-team-2-ids720/data_merging/20_intermediate_files/population_2000_2020_inc.csv?token=AVKGWH7WSP7EA3VGYGCO7NDBTBDSQ"
-)
-death = pd.read_csv("../20_intermediate_files/vital_stata.csv")
+popinc = pd.read_csv("./20_intermediate_files/population_2000_2020_inc.csv")
+death = pd.read_csv("./20_intermediate_files/vital_stata.csv")
 
 
 # %%
@@ -117,16 +120,18 @@ alt.Chart(merge_grouped[merge_grouped.Population < 1_000_000]).encode(
 
 # Based on the plotting taking a cutoff based on population for counties
 # %%
-subset = merge_grouped.loc[merge_grouped["Population"] >= 500000].copy()
-subset["indicator"] = subset["State_Code"] +"-"+subset["County_Name"]
-county=list(subset.indicator.unique())
+subset = merge_grouped.loc[merge_grouped["Population"] >= 400000].copy()
+subset["indicator"] = subset["State_Code"] + "-" + subset["County_Name"]
+county = list(subset.indicator.unique())
 
 # %%
 vs_pop_thresh = dropped_left.copy()
 vs_pop_thresh.head()
 
 # %%
-vs_pop_thresh["indicator"] = vs_pop_thresh["State_Code"] +"-"+vs_pop_thresh["County_Name"]
+vs_pop_thresh["indicator"] = (
+    vs_pop_thresh["State_Code"] + "-" + vs_pop_thresh["County_Name"]
+)
 
 
 # %%
@@ -142,12 +147,9 @@ vs_pop_thresh.State_Code.value_counts()
 vs_pop_thresh.Deaths.isna().sum()
 
 
-
 # %%
 vs_pop_thresh.to_csv(
-    "/Users/Aarushi/Duke/MIDS - Fall 2021/Fall 2021/"
-    "720_IDS_PDS/pds2021-opioids-team-2-ids720/"
-    "20_intermediate_files/mortality_merged_with_pop_thresh.csv",
+    "./20_intermediate_files/mortality_merged_with_pop_thresh.csv",
     encoding="utf-8",
     index=False,
 )
