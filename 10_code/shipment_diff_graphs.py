@@ -58,7 +58,7 @@ def get_reg_fit(data, color, yvar, xvar, legend, alpha=0.05):
         .mark_errorband()
         .encode(
             alt.X(f"{xvar}:Q", axis=alt.Axis(format='.0f', values=years)),
-            y=alt.Y("ci_low", title="Opioid Shipments in Morphine Milligram Equivalent", scale=alt.Scale(zero=False)),
+            y=alt.Y("ci_low", title="Opioid Shipments per Capita", scale=alt.Scale(zero=False)),
             y2="ci_high",
             color=alt.value(f"{color}")
         )
