@@ -15,52 +15,33 @@ df.info()
 df.isna().sum()
 
 # %%
-df_X = df.loc[:, ["Year", "Deaths", "Median_Income_2010", "Population"]].copy()
-df_X.shape
+df["Death_per_cap"] = df["Deaths"] / df["Population"]
+
 
 # %%
-df_X.isna().sum() / len(df_X)
-
-# %%
-imputer = KNNImputer(n_neighbors=3)
-imputed_X = imputer.fit_transform(df_X)
-# imputed_TX = pd.DataFrame(imputed_TX)
-# tx_imputed_values = imputed_TX.iloc[:,1]
-
-# tx_imputed_values
-
-# %%
-df_imputed_X = pd.DataFrame(
-    imputed_X,
-    columns=["Year", "Deaths", "Median_Income_2010", "Population"],
-    # index=idx_list,
+imputed_all = pd.DataFrame(
+    columns=["Year", "Death_per_cap", "Median_Income_2010", "Population"]
 )
-df_imputed_X.isna().sum() / len(df_imputed_X)
+
+for state in df["State_Code"].unique():
+    state_subset = df.loc[df["State_Code"] == state]
+    df_X = state_subset.loc[
+        :, ["Year", "Death_per_cap", "Median_Income_2010", "Population"]
+    ].copy()
+    imputer = KNNImputer(n_neighbors=3)
+    imputed_X = imputer.fit_transform(df_X)
+    imputed_X = pd.DataFrame(imputed_X, columns=df_X.columns, index=df_X.index)
+    imputed_all = pd.concat([imputed_all, imputed_X])
 
 # %%
-df_imputed_X.head()
+imputed_all.rename(columns={"Death_per_cap": "Imputed_death_per_cap"}, inplace=True)
+df_merged = df.merge(
+    imputed_all["Imputed_death_per_cap"], how="left", left_index=True, right_index=True
+)
+df_merged.head()
 
 # %%
-
-
-# %%
-df["imputed_deaths"] = df_imputed_X["Deaths"]
-# merged_TX_X.loc[merged_TX_X["Death_per_cap"].isna()]
-# merged_TX_X.set_index(idx_list, inplace=True)
-df.head()
-
-# %%
-mortality = df.groupby(
-    ["Year", "State_Code", "County_Name", "Population", "Median_Income_2010"],
-    as_index=False,
-)["imputed_deaths"].apply(lambda x: x.sum())
-mortality.head()
-
-# %%
-mortality["Death_per_cap"] = mortality["imputed_deaths"] / mortality["Population"]
-
-# %%
-mortality.to_csv(
+df_merged.to_csv(
     "./20_intermediate_files/mortality_merged_imputed.csv",
     encoding="utf-8",
     index=False,
