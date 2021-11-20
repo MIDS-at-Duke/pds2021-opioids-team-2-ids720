@@ -41,31 +41,36 @@ death.drop("Unnamed: 0", axis=1, inplace=True)
 popinc = popinc.rename({"CTYNAME": "County_Name"}, axis=1)
 popinc
 
+# %%
+death["Deaths"] = death["Deaths"].replace("Missing", np.NaN)
+death["Deaths"] = death["Deaths"].astype(float)
+death.dropna(subset=["Deaths"], inplace=True)
+
 
 # %%
+deaths_grouped = death.groupby(["Year", "State_Code", "County_Name"], as_index=False)[
+    "Deaths"
+].apply(lambda x: x.sum())
+deaths_grouped.isnull().sum()
 
 # %%
 # Merging Population with Deaths
 merged = pd.merge(
-    death[
+    deaths_grouped[
         [
-            "County",
             "Year",
-            "Drug/Alcohol Induced Cause",
-            "Deaths",
             "State_Code",
             "County_Name",
+            "Deaths",
         ]
     ],
     popinc[
         [
-            "STNAME",
-            "County_Name",
             "Year",
             "State_Code",
+            "County_Name",
             "Population",
             "Median_Income_2010",
-            "Income_Error_Margin",
         ]
     ],
     how="outer",
@@ -146,7 +151,6 @@ vs_pop_thresh.State_Code.value_counts()
 # %%
 vs_pop_thresh.Deaths.isna().sum()
 
-
 # %%
 vs_pop_thresh.to_csv(
     "./20_intermediate_files/mortality_merged_with_pop_thresh.csv",
@@ -154,9 +158,6 @@ vs_pop_thresh.to_csv(
     index=False,
 )
 
-# %%
-# vs_pop_thresh["Deaths"] = vs_pop_thresh["Deaths"].replace("Missing", np.NaN)
-# vs_pop_thresh["Deaths"] = vs_pop_thresh["Deaths"].astype(float)
 
 # # %%
 # mortality = vs_pop_thresh.groupby(
