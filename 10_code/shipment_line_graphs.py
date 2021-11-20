@@ -41,6 +41,7 @@ alt.Chart(control_states).mark_line().encode(
 ).properties(
     width=500,
     height=500
+    title="Pre-Policy Trend for States Similar to Florida in Shipments per Capita"
 )
 
 

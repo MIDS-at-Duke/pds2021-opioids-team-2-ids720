@@ -6,12 +6,12 @@ import altair as alt
 
 # import os
 
-# os.chdir(
-#     "C:\\Users\\deeks\\Documents\\MIDS\\IDS 720_Practising Data Science\\Mid-Sem project\\Gitdata\\pds2021-opioids-team-2-ids720\\"
-# )
+os.chdir(
+    "/mnt/c/Users/sdona/Documents/Duke/720IDS/Mid-SemesterProject/pds2021-opioids-team-2-ids720/"
+)
 
 deaths = pd.read_csv(
-    "https://raw.githubusercontent.com/MIDS-at-Duke/pds2021-opioids-team-2-ids720/data_merging/20_intermediate_files/mortality_merged_imputed.csv?token=AQKRUJAKERFFX7DQRG4TIODBUJN2A"
+    "20_intermediate_files/mortality_merged_imputed.csv"
 )
 
 
@@ -35,7 +35,7 @@ alt.Chart(states_similar).mark_line().encode(
     y="Imputed_death_per_cap",
     color="State_Code",
 ).properties(
-    width=500, height=500, title="Pre-policy Trend for States Similar to Florida"
+    width=500, height=500, title="Pre-policy Trend for States Similar to Florida in Deaths per Capita"
 )
 
 # %%
@@ -56,7 +56,7 @@ alt.Chart(states_similar).mark_line().encode(
     y="Imputed_death_per_cap",
     color="State_Code",
 ).properties(
-    width=500, height=500, title="Pre-policy Trend for States Similar to Washington"
+    width=500, height=500, title="Pre-policy Trend for States Similar to Washington in Deaths per Capita"
 )
 
 
@@ -78,120 +78,6 @@ alt.Chart(states_similar).mark_line().encode(
     y="Imputed_death_per_cap",
     color="State_Code",
 ).properties(
-    width=500, height=500, title="Pre-policy Trend for States Similar to Texas"
+    width=500, height=500, title="Pre-policy Trend for States Similar to Texas in Deaths per Capita"
 )
 
-
-# %%
-# we group by states and year as now we are only looking at states over time and not county
-deaths_state = deaths.groupby(["State_Code", "Year"], as_index=False)[
-    ["imputed_deaths", "Population"]
-].sum()
-deaths_state["deaths_per_cap"] = (
-    deaths_state["imputed_deaths"] / deaths_state["Population"]
-)
-
-# %% [markdown]
-# #  Pre - Post Comparison
-## Now we do not filter that data for year but rather select data for all the time
-
-# %%
-# For the change in effect of policy in Florida
-years_total = [
-    2003,
-    2004,
-    2005,
-    2006,
-    2007,
-    2008,
-    2009,
-    2010,
-    2011,
-    2012,
-    2013,
-    2014,
-    2015,
-]
-FL_similar_state = ["FL", "MI", "NV", "SC"]
-states_similar_FL = deaths_state[deaths_state["State_Code"].isin(FL_similar_state)]
-policy_FL = pd.DataFrame({"Year": [2010]})
-
-
-chart = (
-    alt.Chart(states_similar_FL)
-    .mark_line()
-    .encode(
-        alt.X("Year", axis=alt.Axis(format=".0f", values=years_total)),
-        y="deaths_per_cap",
-        color="State_Code",
-    )
-)
-
-
-rule = (
-    alt.Chart(policy_FL)
-    .mark_rule(color="black")
-    .encode(alt.X("Year:Q", axis=alt.Axis(values=years_total)))
-)
-
-
-(chart + rule).properties(width=500, height=500, title="Policy Change in Florida")
-
-
-# %%
-# For the change in effect of policy in Washington
-WA_similar_state = ["WA", "HI", "MT", "CO"]
-states_similar_WA = deaths_state[deaths_state["State_Code"].isin(WA_similar_state)]
-policy_WA = pd.DataFrame({"Year": [2011]})
-
-
-chart = (
-    alt.Chart(states_similar_WA)
-    .mark_line()
-    .encode(
-        alt.X("Year", axis=alt.Axis(format=".0f", values=years_total)),
-        y="deaths_per_cap",
-        color="State_Code",
-    )
-)
-
-
-rule = (
-    alt.Chart(policy_WA)
-    .mark_rule(color="black")
-    .encode(alt.X("Year:Q", axis=alt.Axis(values=years_total)))
-)
-
-
-(chart + rule).properties(width=500, height=500, title="Policy Change in Washington")
-
-
-# %%
-# For the change in effect of policy in Washington
-TX_similar_state = ["TX", "NY", "CA", "OR"]
-states_similar_TX = deaths_state[deaths_state["State_Code"].isin(TX_similar_state)]
-policy_TX = pd.DataFrame({"Year": [2007]})
-
-
-chart = (
-    alt.Chart(states_similar_TX)
-    .mark_line()
-    .encode(
-        alt.X("Year", axis=alt.Axis(format=".0f", values=years_total)),
-        y="deaths_per_cap",
-        color="State_Code",
-    )
-)
-
-
-rule = (
-    alt.Chart(policy_TX)
-    .mark_rule(color="black")
-    .encode(alt.X("Year:Q", axis=alt.Axis(values=years_total)))
-)
-
-
-(chart + rule).properties(width=500, height=500, title="Policy Change in Texas")
-
-
-# %%
