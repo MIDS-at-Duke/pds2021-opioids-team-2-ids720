@@ -29,7 +29,7 @@ pre_ship = ship_grouped.loc[ship_grouped['Year'].isin(year)]
 
 # %%
 # The states below are chosen based on the trend of deaths/capita overtime
-states = ['FL','MI','NV','SC']
+states = ['FL','MI','NV','SC','OR','CA','MI','MO','MT']
 control_states = pre_ship[pre_ship['BUYER_STATE'].isin(states)]
 import altair as alt
 
@@ -40,7 +40,8 @@ alt.Chart(control_states).mark_line().encode(
     
 ).properties(
     width=500,
-    height=500
+    height=500,
+    title="Pre-Policy Trend for States Similar to Florida in Shipments per Capita"
 )
 
 
