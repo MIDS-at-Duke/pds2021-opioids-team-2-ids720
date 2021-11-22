@@ -52,13 +52,13 @@ def get_reg_fit(data, color, yvar, xvar, legend, alpha=0.05):
 
     # Build chart
     predictions['Treat'] = f"{legend}"
-    reg = alt.Chart(predictions).mark_line().encode(x=xvar, y=alt.Y(yvar, axis=alt.Axis(format='%')), color = alt.value(f"{colour}"), opacity=alt.Opacity("Treat", legend=alt.Legend(title="Legend")))
+    reg = alt.Chart(predictions).mark_line().encode(x=xvar, y=alt.Y(yvar), color = alt.value(f"{colour}"), opacity=alt.Opacity("Treat", legend=alt.Legend(title="Legend")))
     ci = (
         alt.Chart(predictions)
         .mark_errorband()
         .encode(
             alt.X(f"{xvar}:Q", axis=alt.Axis(format='.0f', values=years)),
-            y=alt.Y("ci_low", title="Opioid Shipments in Morphine Milligram Equivalent", scale=alt.Scale(zero=False)),
+            y=alt.Y("ci_low", title="Opioid Shipments per Capita in Milligrams (MME)", scale=alt.Scale(zero=False)),
             y2="ci_high",
             color=alt.value(f"{color}")
         )
