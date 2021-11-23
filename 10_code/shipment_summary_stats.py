@@ -1,7 +1,7 @@
 # %%
 import pandas as pd
 
-shipment = pd.read_csv('/mnt/c/Users/sdona/Documents/Duke/720IDS/Mid-SemesterProject/pds2021-opioids-team-2-ids720/20_intermediate_files/merged_pop_and_ship_and_fips.csv')
+shipment = pd.read_csv('https://raw.githubusercontent.com/MIDS-at-Duke/pds2021-opioids-team-2-ids720/data_merging/20_intermediate_files/merged_pop_and_ship_and_fips.csv?token=AVKGWHYI27VQWUKTL76WBFDBUZJ6O')
 
 # aggregate the data by state and year
 ship_grouped = shipment.groupby(['BUYER_STATE','Year'], as_index= False)[['MME', 'Population']].sum()
@@ -9,7 +9,10 @@ ship_grouped = shipment.groupby(['BUYER_STATE','Year'], as_index= False)[['MME',
 # add a calculation for shipments per capita
 ship_grouped['ships_per_cap'] = ship_grouped['MME']/ship_grouped['Population']
 
-# %%
+
+
+
+    # %%
 # subset the data for only Florida
 treatment_state = ship_grouped[ship_grouped['BUYER_STATE']=='FL']
 # subset the data for only the control states
@@ -26,11 +29,14 @@ post_FL_ship = treatment_state.loc[~treatment_state['Year'].isin(year)]
 pre_crtl_ship = control_states.loc[control_states['Year'].isin(year)]
 post_crtl_ship = control_states.loc[~control_states['Year'].isin(year)]
 
+#%%
+pre_FL_ship.head()
+
 # %%
-print("pre-policy FL sum = " + str(pre_FL_ship["MME"].sum()))
-print("post-policy FL sum = " + str(post_FL_ship["MME"].sum()))
-print("pre-policy control sum = " + str(pre_crtl_ship["MME"].sum()))
-print("post-policy control sum = " + str(post_crtl_ship["MME"].sum()))
+print("pre-policy FL sum = " + str(pre_FL_ship["ships_per_cap"].sum()))
+print("post-policy FL sum = " + str(post_FL_ship["ships_per_cap"].sum()))
+print("pre-policy control sum = " + str(pre_crtl_ship["ships_per_cap"].sum()))
+print("post-policy control sum = " + str(post_crtl_ship["ships_per_cap"].sum()))
 
 # %%
 pre_FL_ship.describe()
@@ -45,3 +51,5 @@ pre_crtl_ship.describe()
 post_crtl_ship.describe()
 
 
+
+# %%
