@@ -2,8 +2,9 @@
 # To add a new markdown cell, type '# %% [markdown]'
 # %%
 import pandas as pd
+import numpy as np
 
-population = pd.read_csv('/mnt/c/Users/sdona/Documents/Duke/720IDS/Mid-SemesterProject/pds2021-opioids-team-2-ids720/20_intermediate_files\population_2000_2020_inc.csv')
+population = pd.read_csv('/mnt/c/Users/sdona/Documents/Duke/720IDS/Mid-SemesterProject/pds2021-opioids-team-2-ids720/20_intermediate_files/population_2000_2020_inc.csv')
 
 shipment = pd.read_csv('/mnt/c/Users/sdona/Documents/Duke/720IDS/Mid-SemesterProject/pds2021-opioids-team-2-ids720/20_intermediate_files/shipment_data_cleaned.csv')
 
